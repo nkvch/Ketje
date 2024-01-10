@@ -5,8 +5,8 @@ from keccak.operators.chi import Chi
 from keccak.operators.iota import Iota
 
 
-def KeccakP(state):
-    for i in range(24):
+def KeccakP(state, rounds=24):
+    for i in range(rounds):
         state = Theta(state)
         state = Rho(state)
         state = Pi(state)
@@ -15,8 +15,8 @@ def KeccakP(state):
     return state
 
 
-def KeccakP_star(state):
+def KeccakP_star(state, rounds=24):
     state = Pi_inv(state)
-    state = KeccakP(state)
+    state = KeccakP(state, rounds)
     state = Pi(state)
     return state
