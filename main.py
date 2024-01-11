@@ -5,16 +5,35 @@ from keccak.operators.chi import Chi
 from keccak.operators.iota import Iota
 from keccak.permutation import KeccakP, KeccakP_star
 import numpy as np
+from keccak.monkeyDuplex.MonkeyDuplex import MonkeyDuplex
+from keccak.monkeyWrap.MonkeyWrap import MonkeyWrap
+from bitarray import bitarray
 
-l = 6
-w = 2**l
+D = MonkeyDuplex(KeccakP, r=1024, n_start=24, n_step=24, n_stride=24, size=1600)
 
-state = np.random.randint(0, 2, (5, 5, w)).tolist()
+W = MonkeyWrap(D)
 
-print("Before permutation:")
-print(np.array(state).reshape(w, 5, 5))
+key = bitarray('1010101010101010101010101010101010101010101010101010101010101010')
+nonce = bitarray('1010101010101010101010101010101010101010101010101010101010101010')
 
-state = KeccakP_star(state)
+W.initialize(key, nonce)
 
-print("After permutation:")
-print(np.array(state).reshape(w, 5, 5))
+A = [
+    bitarray('1010101010101010101010101010101010101010101010101010101010101010'),
+    bitarray('1010101010101010101010101010101010101010101010101010101010101010')
+]
+
+B = [
+    bitarray('1010101010101010101010101010101010101010101010101010101010101010'),
+    bitarray('1010101010101010101010101010101010101010101010101010101010101010')
+]
+
+tag_length = 1024
+
+cryptogram, tag = W.wrap(A, B, tag_length)
+
+print(cryptogram)
+print(tag)
+
+
+B_prime = W.unwrap(A, cryptogram, tag)
