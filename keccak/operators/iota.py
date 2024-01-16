@@ -22,7 +22,7 @@ def Iota(state, round_index):
     RC_bin = [int(b) for b in format(RC[round_index], '064b')]
 
     # XOR the round constant with the first lane of the state
-    for z in range(64):
+    for z in range(len(state[0][0])):
         state[0][0][z] ^= RC_bin[z]
 
     return state

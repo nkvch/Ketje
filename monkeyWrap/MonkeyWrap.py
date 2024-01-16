@@ -1,4 +1,6 @@
 from bitarray import bitarray
+from typing import List
+
 from utils.keypack import keypack
 
 def concat_int_with(bit: int, str_bitarray: str) -> bitarray:
@@ -17,7 +19,7 @@ class MonkeyWrap:
 
         self.duplex.start(keypack(K, len(K) + 16) + N)
 
-    def blocks(self, barray: bitarray) -> (list[bitarray], int):
+    def blocks(self, barray: bitarray) -> (List[bitarray], int):
         is_empty = len(barray) == 0
         if is_empty:
             return [bitarray('')], 1
@@ -28,7 +30,7 @@ class MonkeyWrap:
 
         return blocks, len(blocks)
     
-    def from_blocks(self, blocks: list[bitarray]) -> bitarray:
+    def from_blocks(self, blocks: List[bitarray]) -> bitarray:
         barray = bitarray()
         for block in blocks:
             barray += block
